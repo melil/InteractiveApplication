@@ -53,6 +53,7 @@ ext {
     okHttp = "4.10.0"
     dagger = "2.43"
     retrofit = "2.9.0"
+    mpandroidchart = "3.1.0"
 }
 
 dependencies {
@@ -81,5 +82,7 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:${retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofit}"
+
+    implementation "com.github.PhilJay:MPAndroidChart:v${mpandroidchart}"
 
 }

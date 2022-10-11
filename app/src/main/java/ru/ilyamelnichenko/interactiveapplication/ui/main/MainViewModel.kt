@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.ilyamelnichenko.interactiveapplication.R
+import ru.ilyamelnichenko.interactiveapplication.api.responses.ArrayOfXYResponse
 import ru.ilyamelnichenko.interactiveapplication.domain.ApiError
 import ru.ilyamelnichenko.interactiveapplication.domain.UnknownAppError
 import ru.ilyamelnichenko.interactiveapplication.domain.cases.GetPointsUseCase
@@ -24,7 +25,13 @@ class MainViewModel(
     private val _error = MutableSharedFlow<ErrorData>()
     val error: Flow<ErrorData> = _error
 
-    fun getPoints(variant: Int, count: Int) {
+    private val _successPointsCanvas = MutableSharedFlow<ArrayOfXYResponse>()
+    val successPointsCanvas = _successPointsCanvas
+
+    private val _successPointsMp = MutableSharedFlow<ArrayOfXYResponse>()
+    val successPointsMp = _successPointsMp
+
+    fun getPoints(variant: DrawType, count: Int) {
 
         viewModelScope.launch {
 
@@ -32,7 +39,14 @@ class MainViewModel(
 
             pointsUseCase.run(GetPointsUseCase.Param(count))
                 .onSuccess {
-                    it
+                    when(variant) {
+                        DrawType.CANVAS -> {
+                            successPointsCanvas.emit(it.points)
+                        }
+                        DrawType.MPANDROIDCHART -> {
+                            successPointsMp.emit(it.points)
+                        }
+                    }
                 }
                 .onFailure { appError ->
                     when (appError) {
@@ -85,4 +99,8 @@ class MainViewModelFactory @Inject constructor(
             getPointsUseCase
         ) as T
     }
+}
+
+enum class DrawType {
+    CANVAS, MPANDROIDCHART
 }

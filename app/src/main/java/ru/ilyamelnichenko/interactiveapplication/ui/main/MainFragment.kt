@@ -1,5 +1,6 @@
 package ru.ilyamelnichenko.interactiveapplication.ui.main
 
+import android.app.AlertDialog
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -12,9 +13,9 @@ import androidx.lifecycle.coroutineScope
 import kotlinx.coroutines.flow.collect
 import ru.ilyamelnichenko.interactiveapplication.App
 import ru.ilyamelnichenko.interactiveapplication.R
+import ru.ilyamelnichenko.interactiveapplication.api.responses.ArrayOfXYResponse
 import ru.ilyamelnichenko.interactiveapplication.auxiliary.viewBinding
 import ru.ilyamelnichenko.interactiveapplication.databinding.FragmentMainBinding
-import ru.ilyamelnichenko.interactiveapplication.ui.main.di.MainModule
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -29,7 +30,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        (activity?.application as App).component.inject(this)//(MainModule(this)).inject(this)
+        (activity?.application as App).component.inject(this)
         super.onAttach(context)
     }
 
@@ -45,14 +46,8 @@ class MainFragment : Fragment() {
 
 
         binding.apply {
-            message.setText("asd see")
-
-            canvasButton.setOnClickListener {
-                viewModel.getPoints(1, 10)
-            }
-
-            mpandroidchartButton.setOnClickListener {
-                viewModel.getPoints(2, 10)
+            goButton.setOnClickListener {
+                openDialog()
             }
         }
 
@@ -69,5 +64,42 @@ class MainFragment : Fragment() {
 
                 }
         }
+
+        viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
+            viewModel.successPointsCanvas
+                .collect {
+                    goToCanvasFragment(it)
+                }
+        }
+
+        viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
+            viewModel.successPointsMp
+                .collect {
+                    goToCanvasFragment(it)
+                }
+        }
+    }
+
+    private fun openDialog() {
+        AlertDialog.Builder(activity)
+            .setTitle(resources.getString(R.string.dialog_title))
+            .setMessage(resources.getString(R.string.dialog_description))
+            .setPositiveButton(R.string.canvas) { d,_ ->
+                viewModel.getPoints(DrawType.CANVAS, binding.pointsEdittext.text.toString().toInt())
+
+
+                d.dismiss()
+            }
+            .setNegativeButton(R.string.MPAndroidChart) { d,_ ->
+                viewModel.getPoints(DrawType.MPANDROIDCHART, binding.pointsEdittext.text.toString().toInt())
+
+
+                d.dismiss()
+            }
+            .show()
+    }
+
+    private fun goToCanvasFragment(points: ArrayOfXYResponse) {
+        (activity as MainActivity).goToCanvasFragment(points)
     }
 }

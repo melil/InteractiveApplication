@@ -21,11 +21,7 @@ class ChartCustomView @JvmOverloads constructor(
         strokeWidth = lineThickness
         isAntiAlias = true
         style = Paint.Style.STROKE
-    }
-    private var circlePaint = Paint().apply {
-        strokeWidth = dotRadius
-        isAntiAlias = true
-        style = Paint.Style.FILL
+        color = resources.getColor(R.color.green)
     }
     var lineDashPaint = Paint().apply {
         color = context.getColor(R.color.chart_line_dash)
@@ -61,23 +57,22 @@ class ChartCustomView @JvmOverloads constructor(
 
     fun setChart(dailyChart: List<XYResponse>) {
         if (dailyChart.isEmpty()) return
-        val prices = dailyChart.map { it.x!!.toFloat() }
-        var min = prices[0]
-        var max = prices[0]
-        prices.forEach { price ->
-            if (price < min) min = price
-            if (price > max) max = price
+        val yDots = dailyChart.map { it.y!!.toFloat() }
+        var min = yDots[0]
+        var max = yDots.last()
+        yDots.forEach { dot ->
+            if (dot < min) min = dot
+            if (dot > max) max = dot
         }
         val yRange = (max - min)
         chart.clear()
-        prices.forEach { price ->
-            chart.add((price - min) / yRange)
+        yDots.forEach { dot ->
+            chart.add((dot - min) / yRange)
         }
         invalidate()
     }
 
     fun setColor(color: Int) {
-        circlePaint.color = color
         linePaint.color = color
     }
 
@@ -99,7 +94,6 @@ class ChartCustomView @JvmOverloads constructor(
     }
 
     private fun drawChart(canvas: Canvas?) {
-        canvas?.drawCircle(getDotX(0), getDotY(chart[0]), dotRadius, circlePaint)
         linePath.rewind()
         linePath.moveTo(getDotX(0), getDotY(chart[0]))
         for (i in 1 until chart.size) {
@@ -112,11 +106,11 @@ class ChartCustomView @JvmOverloads constructor(
         lineDashPath.rewind()
         lineDashPath.moveTo(
             getDotX(0),
-            getDotY(chart[0]) - dotRadius + lineThickness / 2
+            getDotY(chart[0])
         )
         lineDashPath.lineTo(
             getDotX(chart.lastIndex),
-            getDotY(chart[0]) - dotRadius + lineThickness / 2
+            getDotY(chart[0])
         )
         canvas?.drawPath(lineDashPath, lineDashPaint)
     }
