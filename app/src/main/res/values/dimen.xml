@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="chart_line_thickness">1.5dp</dimen>
+    <dimen name="chart_dot_radius">1.5dp</dimen>
+    <dimen name="chart_dash_line_length">3dp</dimen>
+    <dimen name="button_padding_default">8dp</dimen>
+</resources>

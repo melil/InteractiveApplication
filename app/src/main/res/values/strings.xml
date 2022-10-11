@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">InteractiveApplication</string>
+    <string name="canvas">Canvas</string>
+    <string name="MPAndroidChart">MPAndroidChart</string>
+    <string name="description">HR Challenge for <b>InteractiveStandart</b></string>
+
+    <string name="error_title">Произошла ошибка.</string>
+    <string name="default_error_description">Стандартная ошибка.</string>
+    <string name="api_error_description">Ошибка API, попробуйте еще раз</string>
+    <string name="unknown_error_description">Неизвестная ошибка.</string>
+</resources>

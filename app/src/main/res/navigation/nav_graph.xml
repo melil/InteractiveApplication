@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/mainFragment"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.ilyamelnichenko.interactiveapplication.ui.main.MainFragment"
+        android:label="MainFragment" />
+</navigation>
