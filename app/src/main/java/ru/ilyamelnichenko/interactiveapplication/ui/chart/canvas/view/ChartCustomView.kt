@@ -59,7 +59,7 @@ class ChartCustomView @JvmOverloads constructor(
         if (dailyChart.isEmpty()) return
         val yDots = dailyChart.map { it.y!!.toFloat() }
         var min = yDots[0]
-        var max = yDots.last()
+        var max = yDots[0]
         yDots.forEach { dot ->
             if (dot < min) min = dot
             if (dot > max) max = dot

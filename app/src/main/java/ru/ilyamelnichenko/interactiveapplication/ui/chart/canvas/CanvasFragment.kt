@@ -1,24 +1,32 @@
 package ru.ilyamelnichenko.interactiveapplication.ui.chart.canvas
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
+import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
-import kotlinx.coroutines.flow.collect
 import ru.ilyamelnichenko.interactiveapplication.App
+import ru.ilyamelnichenko.interactiveapplication.BuildConfig
 import ru.ilyamelnichenko.interactiveapplication.R
 import ru.ilyamelnichenko.interactiveapplication.api.responses.ArrayOfXYResponse
 import ru.ilyamelnichenko.interactiveapplication.auxiliary.viewBinding
 import ru.ilyamelnichenko.interactiveapplication.databinding.FragmentCanvasBinding
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 import javax.inject.Inject
+
 
 class CanvasFragment : Fragment() {
 
@@ -43,6 +51,8 @@ class CanvasFragment : Fragment() {
         vmFactory
     }
 
+    private lateinit var imagePath: File
+
     override fun onAttach(context: Context) {
         (activity?.application as App).component.inject(this)
         super.onAttach(context)
@@ -66,6 +76,12 @@ class CanvasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            textText.setOnClickListener {
+
+            }
+        }
 
         viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
             viewModel.text.collect {

@@ -30,6 +30,16 @@ android {
 
     }
 
+    flavorDimensions "version"
+    productFlavors {
+        api {
+            dimension "version"
+        }
+        mock {
+            dimension "version"
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -54,6 +64,7 @@ ext {
     dagger = "2.43"
     retrofit = "2.9.0"
     mpandroidchart = "3.1.0"
+    adapterdelegates4 = "4.3.0"
 }
 
 dependencies {
@@ -84,5 +95,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:${retrofit}"
 
     implementation "com.github.PhilJay:MPAndroidChart:v${mpandroidchart}"
+
+    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:${adapterdelegates4}"
 
 }
