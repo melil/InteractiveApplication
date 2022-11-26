@@ -13,11 +13,21 @@ import ru.ilyamelnichenko.interactiveapplication.api.responses.ArrayOfXYResponse
 import ru.ilyamelnichenko.interactiveapplication.domain.ApiError
 import ru.ilyamelnichenko.interactiveapplication.domain.UnknownAppError
 import ru.ilyamelnichenko.interactiveapplication.domain.cases.GetPointsUseCase
+import ru.ilyamelnichenko.interactiveapplication.domain.cases.RegisterUseCase
 import javax.inject.Inject
 
+interface MainMethods {
+    fun register(name: String, email: String, phone: String)
+}
+
 class MainViewModel(
-    private val pointsUseCase: GetPointsUseCase,
-) : ViewModel() {
+    private val registerUseCase: RegisterUseCase,
+) : ViewModel(), MainMethods {
+
+    companion object {
+        const val EMAIL = "email"
+        const val PHONE = "phone"
+    }
 
     private val _progress = MutableStateFlow(false)
     val progress: Flow<Boolean> = _progress
@@ -25,34 +35,49 @@ class MainViewModel(
     private val _error = MutableSharedFlow<ErrorData>()
     val error: Flow<ErrorData> = _error
 
-    private val _successPointsCanvas = MutableSharedFlow<ArrayOfXYResponse>()
-    val successPointsCanvas = _successPointsCanvas
+    private val _emailError = MutableStateFlow<String>("")
+    val emailError: Flow<String> = _emailError
 
-    private val _successPointsMp = MutableSharedFlow<ArrayOfXYResponse>()
-    val successPointsMp = _successPointsMp
+    private val _phoneError = MutableStateFlow<String>("")
+    val phoneError: Flow<String> = _phoneError
 
-    fun getPoints(variant: DrawType, count: Int) {
+    val name = MutableStateFlow("")
+    val phone =  MutableStateFlow("")
+
+    override fun register(name: String, email: String, phone: String) {
 
         viewModelScope.launch {
 
             _progress.emit(true)
 
-            pointsUseCase.run(GetPointsUseCase.Param(count))
-                .onSuccess {
-                    when(variant) {
-                        DrawType.CANVAS -> {
-                            successPointsCanvas.emit(it.points)
+            registerUseCase.run(RegisterUseCase.Param(name, email, phone))
+                .onSuccess { output ->
+
+                    when(output.output.success) {
+                        true -> {
+
                         }
-                        DrawType.MPANDROIDCHART -> {
-                            successPointsMp.emit(it.points)
+                        false -> {
+                            output.output.errors?.forEach { error ->
+                                when(error.field) {
+                                    EMAIL -> {
+                                        _emailError.emit(error.errorString)
+                                    }
+                                    PHONE -> {
+                                        _phoneError.emit(error.errorString)
+                                    }
+                                }
+                            }
                         }
                     }
+
+
+                    _progress.emit(false)
                 }
                 .onFailure { appError ->
                     when (appError) {
                         ApiError -> {
                             _error.emit(ErrorData.apiError)
-
                         }
                         UnknownAppError -> {
                             _error.emit(ErrorData.unknownError)
@@ -91,16 +116,13 @@ class MainViewModel(
 
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory @Inject constructor(
-    private val getPointsUseCase: GetPointsUseCase,
+    private val registerUseCase: RegisterUseCase,
 ) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MainViewModel(
-            getPointsUseCase
+            registerUseCase
         ) as T
     }
 }
 
-enum class DrawType {
-    CANVAS, MPANDROIDCHART
-}

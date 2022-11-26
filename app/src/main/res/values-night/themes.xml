@@ -14,9 +14,4 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ButtonDefault" parent="ThemeOverlay.AppCompat">
-        <item name="backgroundTint">@color/blue</item>
-        <item name="maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
 </resources>

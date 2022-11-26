@@ -27,7 +27,6 @@ class GetPointsUseCase @Inject constructor(private val repository: InteractiveRe
                 )
             }
             .onFailure {
-                Log.d("SASHD", it.toString())
                 return Failure(UnknownAppError)
             }
 

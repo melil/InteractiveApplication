@@ -1,34 +1,26 @@
 package ru.ilyamelnichenko.interactiveapplication.ui.chart.canvas
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import ru.ilyamelnichenko.interactiveapplication.App
-import ru.ilyamelnichenko.interactiveapplication.BuildConfig
 import ru.ilyamelnichenko.interactiveapplication.R
+import ru.ilyamelnichenko.interactiveapplication.adapter.DiffAdapter
+import ru.ilyamelnichenko.interactiveapplication.adapter.delegates.AdapterDelegates
 import ru.ilyamelnichenko.interactiveapplication.api.responses.ArrayOfXYResponse
 import ru.ilyamelnichenko.interactiveapplication.auxiliary.viewBinding
-import ru.ilyamelnichenko.interactiveapplication.databinding.FragmentCanvasBinding
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import ru.ilyamelnichenko.interactiveapplication.databinding.FragmentChartCanvasBinding
+import ru.ilyamelnichenko.interactiveapplication.ui.chart.BaseChartFragment
+import ru.ilyamelnichenko.interactiveapplication.ui.chart.BaseChartViewModelFactory
 import javax.inject.Inject
 
 
-class CanvasFragment : Fragment() {
+class CanvasFragment : BaseChartFragment() {
 
     companion object {
         private const val ARG_POINTS = "POINTS"
@@ -42,16 +34,14 @@ class CanvasFragment : Fragment() {
 
     }
 
-    private val binding: FragmentCanvasBinding by viewBinding(FragmentCanvasBinding::bind)
+    val binding: FragmentChartCanvasBinding by viewBinding(FragmentChartCanvasBinding::bind)
 
     @Inject
-    lateinit var vmFactory: CanvasViewModelFactory
+    lateinit var vmFactory: BaseChartViewModelFactory
 
     private val viewModel by viewModels<CanvasViewModel> {
         vmFactory
     }
-
-    private lateinit var imagePath: File
 
     override fun onAttach(context: Context) {
         (activity?.application as App).component.inject(this)
@@ -62,7 +52,7 @@ class CanvasFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_canvas, container, false)
+        return inflater.inflate(R.layout.fragment_chart_canvas, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,10 +67,8 @@ class CanvasFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            textText.setOnClickListener {
-
-            }
+        with(binding.rvItems) {
+            adapter = this@CanvasFragment.adapter
         }
 
         viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
@@ -90,13 +78,20 @@ class CanvasFragment : Fragment() {
             }
         }
 
+
+        viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
+            viewModel.adapterItems
+                .collect {
+                    adapter.items = it
+                }
+        }
+
         viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
             viewModel.chart
                 .collect {
-                    Log.d("SMAS", "asdasd")
-                    it
                     binding.chart.setChart(it.points!!)
                 }
         }
+
     }
 }

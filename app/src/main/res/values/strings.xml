@@ -1,15 +1,14 @@
 <resources>
-    <string name="app_name">InteractiveApplication</string>
-    <string name="go">Поехали</string>
-    <string name="canvas">Canvas</string>
-    <string name="MPAndroidChart">MPAndroidChart</string>
-    <string name="description">HR Challenge for <b>InteractiveStandart</b></string>
+    <string name="app_name">Super app</string>
+    <string name="apply">Apply</string>
+    <string name="description">Enter your data here</string>
 
     <string name="error_title">Произошла ошибка.</string>
     <string name="default_error_description">Стандартная ошибка.</string>
     <string name="api_error_description">Ошибка API, попробуйте еще раз</string>
     <string name="unknown_error_description">Неизвестная ошибка.</string>
 
-    <string name="dialog_title">Внимание!</string>
-    <string name="dialog_description">Как будем смотреть графики?</string>
+    <string name="placeholder_name">Name</string>
+    <string name="placeholder_email">Email</string>
+    <string name="placeholder_phone">Phone</string>
 </resources>

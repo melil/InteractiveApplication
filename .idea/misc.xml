@@ -5,8 +5,11 @@
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18854166666666666" />
         <entry key="app/src/main/res/layout/fragment_canvas.xml" value="0.2263641357421875" />
+        <entry key="app/src/main/res/layout/fragment_chart.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_chart_canvas.xml" value="0.1831306990881459" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.3036651390186255" />
         <entry key="app/src/main/res/layout/fragment_mpandroichart.xml" value="0.18262411347517732" />
+        <entry key="app/src/main/res/layout/item_table.xml" value="0.45559942985619695" />
         <entry key="app/src/main/res/xml/provider_paths.xml" value="0.1" />
       </map>
     </option>

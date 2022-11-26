@@ -1,0 +1,13 @@
+{
+  "success": false,
+  "errors": [
+    {
+      "field": "email",
+      "error_string": "Email does not exist"
+    },
+    {
+      "field": "phone",
+      "error_string": "Enter valid phone"
+    }
+  ]
+}
